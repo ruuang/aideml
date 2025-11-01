@@ -131,7 +131,6 @@ python run_competitions.py \
     "logs_path": "<string>",
     "code_path": "<string>"
   },
-  ...
 ]
 ```
 
