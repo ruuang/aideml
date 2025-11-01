@@ -1,6 +1,6 @@
 # AIDE 运行说明
 
-## 数据集及任务说明目录结构要求
+## 数据集及任务描述文档存放目录结构
 
 ```
 <data-dir>/
@@ -16,10 +16,10 @@
       └── full_instructions.txt
 ```
 
-**注意：** 对于 MLE-bench 的任务，借用 [ML-Master](https://github.com/sjtu-sai-agents/ML-Master) 的工作，将各任务说明文档存放在 `dataset/full_instructions` 文件夹中。
+**注意：** 对于 MLE-bench 的任务，借用 [ML-Master](https://github.com/sjtu-sai-agents/ML-Master) 的工作，将各任务说明文档存放在 [dataset/full_instructions](dataset/full_instructions) 文件夹中。
 
 ## AIDE 本身运行方式
-一次只能运行一个task。AIDE原文README请见 [aide/README.md](aide/README.md).
+一次只能运行一个task。AIDE原文README见 [aide/README.md](aide/README.md).
 ### Setup
 
 设置 OpenAI (or Anthropic) API key:
@@ -42,14 +42,14 @@ aide data_dir="<path to your data directory>" goal="<describe the agent's goal f
 aide data_dir="example_tasks/house_prices" goal="Predict the sales price for each house" eval="Use the RMSE metric between the logarithm of the predicted and observed values."
 ```
 
-或者提供任务说明文档（推荐）.
+或者提供任务描述文档（推荐）.
 
 ```bash
 aide data_dir="my_data_dir" desc_file="my_task_description.txt"
 ```
 
 ### 命令参数说明
-完整参数配置文件在[aide/utils/config.yaml](aide/utils/config.yaml)，可通过命令行设置。
+完整参数配置文件在[aide/utils/config.yaml](aide/utils/config.yaml)，参数可通过命令行设置。
 
 示例：
 - `data_dir` (required): 设置数据集地址。
@@ -59,15 +59,15 @@ aide data_dir="my_data_dir" desc_file="my_task_description.txt"
 输出结果存放在log_dir参数控制的文件路径下。
 
 - `best_solution`和`best_submission`: 最优解的代码和该代码生成的提交文件。
-- `aide.log`和`aide.verbose.log`: 执行日志，`aide.verbose.log`增加每次调用llm时的完整prompt。
+- `aide.log`和`aide.verbose.log`: 执行日志，`aide.verbose.log`相比`aide.log`多了每次调用llm时的完整prompt。
 - `journal.json`: 每次迭代的代码+执行反馈等信息。
 - `tree_plot.html`: 解决方案树。
 
 ## AIDE 批量运行
-自动执行多个aide命令。
+自动执行多个任务。
 
 ### 竞赛集文件
-给定要执行的task名称。
+每次运行通过竞赛集文件给定要执行的tasks名称。
 
 竞赛集文件是一个文本文件，每行包含一个竞赛ID。支持以下格式：
 
@@ -108,20 +108,11 @@ python run_competitions.py \
   - 不能只在[aide/utils/config.yaml](aide/utils/config.yaml)中配置，因为在原来的aide脚本里面这会用到prompt构建中，并没有起到实质的限制作用。
   
 - `--n-seed <num>`：每个竞赛的重复运行次数（默认：1）
-  - 每次运行使用不同的随机种子（0, 1, 2, ...）
-  - 实验名称格式：`<competition-id>_seed_<seed>`
 
 
 - `--continue-on-error`：即使某个竞赛失败也继续运行剩余竞赛（默认：启用）
 
 - `--skip-existing`：跳过已存在完整日志的竞赛（默认：启用）
-  - 检查以下文件是否存在：
-    - `aide.log`
-    - `journal.json`
-    - `config.yaml`
-    - `tree_plot.html`
-  - 检查 `journal.json` 是否包含有效的非 buggy 节点
-  - 只有所有条件满足时才会跳过
 
 - `--aide-args <args...>`：传递给 aide 命令的额外参数
   - 可以传递多个参数，例如：`--aide-args "agent.steps=10" "agent.code.model=gpt-4o"`
