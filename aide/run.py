@@ -2,6 +2,9 @@ import atexit
 import logging
 import shutil
 import sys
+import time
+from datetime import datetime
+from tqdm import tqdm
 
 from . import backend
 
@@ -60,6 +63,8 @@ def journal_to_rich_tree(journal: Journal):
     return tree
 
 
+
+
 def journal_to_string_tree(journal: Journal) -> str:
     best_node = journal.get_best_node()
     tree_str = "Solution tree\n"
@@ -91,6 +96,7 @@ def journal_to_string_tree(journal: Journal) -> str:
 
 def run():
     cfg = load_cfg()
+    
     log_format = "[%(asctime)s] %(levelname)s: %(message)s"
     logging.basicConfig(
         level=getattr(logging, cfg.log_level.upper()), format=log_format, handlers=[]
@@ -145,6 +151,17 @@ def run():
     )
 
     global_step = len(journal)
+    start_time = time.time()
+    
+    # 创建tqdm进度条
+    pbar = tqdm(
+        total=cfg.agent.steps,
+        initial=global_step,
+        desc="运行进度",
+        unit="步",
+        bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}]"
+    )
+    
     prog = Progress(
         TextColumn("[progress.description]{task.description}"),
         BarColumn(bar_width=20),
@@ -190,12 +207,29 @@ def run():
         )
 
     while global_step < cfg.agent.steps:
+        step_start_time = time.time()
         agent.step(exec_callback=exec_callback)
+        
+        # 更新进度条
+        global_step = len(journal)
+        elapsed_time = time.time() - start_time
+        step_time = time.time() - step_start_time
+        
+        # 更新tqdm进度条显示
+        pbar.set_description(f"第{global_step}步 (已执行{elapsed_time:.1f}秒)")
+        pbar.update(1)
+        
+        # 在控制台显示详细信息
+        logger.info(f"完成第 {global_step}/{cfg.agent.steps} 步，本步耗时: {step_time:.2f}秒，总耗时: {elapsed_time:.2f}秒")
+        
         # on the last step, print the tree
         if global_step == cfg.agent.steps - 1:
             logger.info(journal_to_string_tree(journal))
         save_run(cfg, journal)
-        global_step = len(journal)
+    
+    # 关闭进度条并显示最终统计
+    pbar.close()
+    
     interpreter.cleanup_session()
 
 

@@ -2,6 +2,7 @@
 
 import time
 import logging
+import os
 
 import anthropic
 from .utils import FunctionSpec, OutputType, backoff_create, opt_messages_to_list
@@ -10,6 +11,7 @@ from funcy import notnone, once, select_values
 logger = logging.getLogger("aide")
 
 _client: anthropic.Anthropic = None  # type: ignore
+
 
 ANTHROPIC_TIMEOUT_EXCEPTIONS = (
     anthropic.RateLimitError,

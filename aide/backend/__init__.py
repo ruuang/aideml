@@ -12,6 +12,10 @@ def determine_provider(model: str) -> str:
         return "anthropic"
     elif model.startswith("gemini-"):
         return "gdm"
+    elif model.startswith("deepseek-"):
+        return "openai"
+    elif model.startswith("MiniMax-"):
+        return "openai"
     # all other models are handle by openrouter
     else:
         return "openrouter"

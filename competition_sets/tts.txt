@@ -1,0 +1,15 @@
+mlsp-2013-birds
+osic-pulmonary-fibrosis-progression
+cdiscount-image-classification-challenge
+petfinder-pawpularity-score
+statoil-iceberg-classifier-challenge
+tgs-salt-identification-challenge
+vesuvius-challenge-ink-detection
+uw-madison-gi-tract-image-segmentation
+inaturalist-2019-fgvc6
+random-acts-of-pizza
+denoising-dirty-documents
+detecting-insults-in-social-commentary
+hubmap-kidney-segmentation
+tweet-sentiment-extraction
+kuzushiji-recognition

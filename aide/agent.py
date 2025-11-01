@@ -247,6 +247,47 @@ class Agent:
         logger.info(f"Drafted new node {new_node.id}")
         return new_node
 
+    # parallel
+    # def _draft(self) -> Node:
+    #     introduction = (
+    #         "You are a Kaggle grandmaster attending a competition. "
+    #         "In order to win this competition, you need to come up with an excellent and creative plan "
+    #         "for a solution and then implement this solution in Python. We will now provide a description of the task."
+    #     )
+    #     if self.acfg.obfuscate:
+    #         introduction = (
+    #             "You are an expert machine learning engineer attempting a task. "
+    #             "In order to complete this task, you need to come up with an excellent and creative plan "
+    #             "for a solution and then implement this solution in Python. We will now provide a description of the task."
+    #         )
+    #     prompt: Any = {
+    #         "Introduction": introduction,
+    #         "Task description": self.task_desc,
+    #         # "Memory": self.journal.generate_summary(),
+    #         "Instructions": {},
+    #     }
+    #     prompt["Instructions"] |= self._prompt_resp_fmt
+        
+    #     # iteration in Parallel
+    #     prompt["Instructions"] |= {
+    #         "Solution sketch guideline": [
+    #             "The solution sketch should be 3-5 sentences.",
+    #             "Propose an evaluation metric that is reasonable for this task.",
+    #             "Don't suggest to do EDA.",
+    #             "The data is already prepared and available in the `./input` directory. There is no need to unzip any files.",
+    #         ],
+    #     }
+    #     prompt["Instructions"] |= self._prompt_impl_guideline
+    #     prompt["Instructions"] |= self._prompt_environment
+
+    #     if self.acfg.data_preview:
+    #         prompt["Data Overview"] = self.data_preview
+
+    #     plan, code = self.plan_and_code_query(prompt)
+    #     new_node = Node(plan=plan, code=code)
+    #     logger.info(f"Drafted new node {new_node.id}")
+    #     return new_node
+
     def _improve(self, parent_node: Node) -> Node:
         introduction = (
             "You are a Kaggle grandmaster attending a competition. You are provided with a previously developed "
@@ -372,10 +413,10 @@ class Agent:
         if best_node is not None:
             if best_node.id == result_node.id:
                 logger.info(f"Node {result_node.id} is the best node so far")
-                best_solution_dir = self.cfg.workspace_dir / "best_solution"
+                best_solution_dir = self.cfg.log_dir / "best_solution"
                 best_solution_dir.mkdir(exist_ok=True, parents=True)
                 # copy submission/submission.csv to best_submission/submission.csv
-                best_submission_dir = self.cfg.workspace_dir / "best_submission"
+                best_submission_dir = self.cfg.log_dir / "best_submission"
                 best_submission_dir.mkdir(exist_ok=True, parents=True)
                 shutil.copy(
                     self.cfg.workspace_dir / "submission" / "submission.csv",
@@ -418,8 +459,8 @@ class Agent:
         response = cast(
             dict,
             query(
-                system_message=prompt,
-                user_message=None,
+                system_message=None,
+                user_message=prompt,
                 func_spec=review_func_spec,
                 model=self.acfg.feedback.model,
                 temperature=self.acfg.feedback.temp,

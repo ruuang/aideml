@@ -1,0 +1,9 @@
+new-york-city-taxi-fare-prediction
+tabular-playground-series-dec-2021
+tabular-playground-series-may-2022
+icecube-neutrinos-in-deep-ice
+smartphone-decimeter-2022
+stanford-covid-vaccine
+champs-scalar-coupling
+h-and-m-personalized-fashion-recommendations
+nomad2018-predict-transparent-conductors

@@ -198,16 +198,16 @@ def save_run(cfg: Config, journal: Journal):
     if len(journal) > 0:
         tree_export.generate(cfg, journal, cfg.log_dir / "tree_plot.html")
     # save the best found solution
-    best_node = journal.get_best_node()
-    if best_node is not None:
-        with open(cfg.log_dir / "best_solution.py", "w") as f:
-            f.write(best_node.code)
+    # best_node = journal.get_best_node()
+    # if best_node is not None:
+    #     with open(cfg.log_dir / "best_solution.py", "w") as f:
+    #         f.write(best_node.code)
     # concatenate logs
     with open(cfg.log_dir / "full_log.txt", "w") as f:
         f.write(
             concat_logs(
                 cfg.log_dir / "aide.log",
-                cfg.workspace_dir / "best_solution" / "node_id.txt",
+                cfg.log_dir / "best_solution" / "node_id.txt",
                 cfg.log_dir / "filtered_journal.json",
             )
         )

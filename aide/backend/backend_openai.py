@@ -3,6 +3,7 @@
 import json
 import logging
 import time
+import os
 
 from aide.backend.utils import (
     FunctionSpec,
@@ -14,6 +15,7 @@ from funcy import notnone, once, select_values
 import openai
 
 logger = logging.getLogger("aide")
+
 
 _client: openai.OpenAI = None  # type: ignore
 
@@ -29,7 +31,8 @@ OPENAI_TIMEOUT_EXCEPTIONS = (
 @once
 def _setup_openai_client():
     global _client
-    _client = openai.OpenAI(max_retries=0)
+    
+    _client = openai.OpenAI(api_key="sk-sZxScCcTfpoDWTEBD6A4D8B00a544c2bB69bF14f8c358976",base_url="https://api3.apifans.com/v1")
 
 
 def query(
